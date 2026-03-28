@@ -30,9 +30,13 @@ RUN cmake -GNinja .. \
 RUN ninja
 RUN ninja install
 
-# s6-overlay
+ARG TARGETARCH
+
 ADD https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-noarch.tar.xz /tmp/
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
+ADD https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-${TARGETARCH}.tar.xz /tmp/
+
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
+ && tar -C / -Jxpf /tmp/s6-overlay-${TARGETARCH}.tar.xz
 
 # service
 COPY rootfs/ /
