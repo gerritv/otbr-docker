@@ -30,12 +30,18 @@ RUN cmake -GNinja .. \
 RUN ninja
 RUN ninja install
 
-# s6-overlay v2 (simple + stable)
-ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp/
-RUN tar -C / -zxf /tmp/s6-overlay-amd64.tar.gz
+# install s6-overlay v3 (amd64 only)
+RUN apt-get update && apt-get install -y curl xz-utils
+RUN curl -L https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-noarch.tar.xz -o /tmp/s6-noarch.tar.xz \
+ && curl -L https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-x86_64.tar.xz -o /tmp/s6-x86_64.tar.xz \
+ && tar -C / -Jxpf /tmp/s6-noarch.tar.xz \
+ && tar -C / -Jxpf /tmp/s6-x86_64.tar.xz
 
 # service
 COPY rootfs/ /
+RUN ls -l /bin/sh
+RUN ls -l /init
+RUN ls -l /etc/services.d/otbr-agent/run
 RUN chmod +x /etc/services.d/otbr-agent/run
 
 ENTRYPOINT ["/init"]
