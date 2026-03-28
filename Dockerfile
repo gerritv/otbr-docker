@@ -3,7 +3,7 @@ FROM debian:bookworm-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
-    lsb-release \
+    lsb-release libsystemd\
     libglib2.0-0 \
     dbus \
     git build-essential cmake ninja-build pkg-config \
