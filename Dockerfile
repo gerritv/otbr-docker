@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Build dependencies
 RUN apt-get update && apt-get install -y \
+    lsb-release \
     git build-essential cmake ninja-build pkg-config \
     libssl-dev libdbus-1-dev libavahi-client-dev \
     libreadline-dev libsystemd-dev libglib2.0-0 \
