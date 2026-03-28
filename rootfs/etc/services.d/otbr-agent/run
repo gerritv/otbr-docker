@@ -1,8 +1,8 @@
-#!/usr/bin/sh
+#!/bin/sh
 # with-contenv
 
 exec /usr/local/sbin/otbr-agent \
   -I wpan0 \
   -B eno1 \
-  -v "Gerrit" \
-  "spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800"
+  "spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800" \
+  -v TheVendor
