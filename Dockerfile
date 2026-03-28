@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     git build-essential cmake ninja-build pkg-config \
     libssl-dev libdbus-1-dev libavahi-client-dev \
     libreadline-dev iproute2 iptables curl ca-certificates \
+    python3 python3-pip \    
     && rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/openthread/ot-br-posix.git /otbr
@@ -21,7 +22,8 @@ WORKDIR /otbr/build
 RUN cmake -GNinja .. \
     -DOTBR_INFRA_IF_NAME=eth0 \
     -DOTBR_BORDER_ROUTING=ON \
-    -DOTBR_NAT64=ON
+    -DOTBR_NAT64=ON \
+    -DOTBR_SYSTEMD=OFF
 
 RUN ninja
 RUN ninja install
