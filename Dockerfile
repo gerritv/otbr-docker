@@ -30,12 +30,9 @@ RUN cmake -GNinja .. \
 RUN ninja
 RUN ninja install
 
-# s6-overlay (amd64 only)
-ADD https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-noarch.tar.xz /tmp/
-ADD https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-x86_64.tar.xz /tmp/
-
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
- && tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
+# s6-overlay v2 (simple + stable)
+ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp/
+RUN tar -C / -zxf /tmp/s6-overlay-amd64.tar.gz
 
 # service
 COPY rootfs/ /
