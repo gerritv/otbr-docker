@@ -3,5 +3,7 @@ with-contenv
 
 otbr-agent \
   -I wpan0 \
-  -B eth0 \
+  -B eno1 \
+  -v "Gerrit" \
+  -m "ESP32-C6-RCP" \
   "spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800"
