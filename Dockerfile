@@ -13,26 +13,35 @@ RUN apt-get update && apt-get install -y \
 
 # Clone OTBR
 WORKDIR /usr/src
-RUN git clone --depth 1 https://github.com/openthread/ot-br-posix.git /usr/src/ot-br-posix
+RUN git clone https://github.com/openthread/ot-br-posix.git /usr/src/ot-br-posix
 WORKDIR /usr/src/ot-br-posix
 RUN git submodule update --init
 
+RUN apt-get update && apt-get install -y sudo
+
+RUN ./script/bootstrap
+
 # Build OTBR (minimal)
-WORKDIR /usr/src/ot-br-posix/build
-RUN cmake -GNinja .. \
+WORKDIR /usr/src/ot-br-posix
+
+RUN ./script/cmake-build \
     -DBUILD_TESTING=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
-    -DOTBR_SYSTEMD=OFF \
+    -DOTBR_DBUS=OFF \
     -DOTBR_WEB=OFF \
     -DOTBR_REST=OFF \
     -DOTBR_BORDER_ROUTING=ON \
     -DOTBR_BACKBONE_ROUTER=ON \
     -DOTBR_NAT64=ON \
     -DOTBR_VENDOR_NAME="MyVendor" \
-    -DOTBR_PRODUCT_NAME="ESP32-C6-RCP" \
-    -DOTBR_TREL=OFF
-RUN ninja
-RUN ninja install
+    -DOTBR_PRODUCT_NAME="ESP32-C6-RCP"
+
+RUN cd build/otbr && ninja install
+
+# Check results
+RUN echo "==== CHECK OTBR INSTALL ====" \
+ && find /usr/local -name otbr-agent || true \
+ && ls -l /usr/local/bin || true
 
 # --- Stage 2: Runtime container ---
 FROM debian:bookworm-slim
