@@ -22,5 +22,3 @@ RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
 COPY rootfs/ /
 
 ENTRYPOINT ["/init"]
-
-chmod +x rootfs/etc/services.d/otbr-agent/run
