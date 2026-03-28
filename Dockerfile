@@ -51,7 +51,7 @@ COPY --from=builder /usr/local/lib /usr/local/lib
 COPY --from=builder /usr/local/share /usr/local/share
 
 # Add s6 service
-COPY rootfs/ /etc/services.d/
+COPY rootfs/ / 
 
 # Ensure run script is executable
 RUN chmod +x /etc/services.d/otbr-agent/run
