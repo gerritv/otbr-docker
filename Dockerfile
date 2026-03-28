@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /usr/src
 RUN git clone --depth 1 https://github.com/openthread/ot-br-posix.git /usr/src/ot-br-posix
 WORKDIR /usr/src/ot-br-posix
-RUN git submodule update --init
+RUN git submodule update --init --recursive
 
 # Build OTBR (minimal)
 WORKDIR /usr/src/ot-br-posix/build
