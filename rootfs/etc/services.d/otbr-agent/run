@@ -1,7 +1,7 @@
-#!/usr/bin/execlineb -P
-with-contenv
+#!/usr/bin/sh
+# with-contenv
 
-otbr-agent \
+exec /usr/local/sbin/otbr-agent \
   -I wpan0 \
   -B eno1 \
   -v "Gerrit" \
