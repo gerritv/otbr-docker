@@ -24,7 +24,8 @@ RUN cmake -GNinja .. \
     -DOTBR_BORDER_ROUTING=ON \
     -DOTBR_NAT64=ON \
     -DOTBR_SYSTEMD=OFF \
-    -DOTBR_BUILD_TESTS=OFF
+    -DOTBR_BUILD_TESTS=OFF \
+    -DBUILD_TESTING=OFF
 
 RUN ninja
 RUN ninja install
