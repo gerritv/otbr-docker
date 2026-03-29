@@ -12,6 +12,11 @@ RUN apt-get update && apt-get install -y \
     python3 python3-pip iproute2 iptables curl xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Node.js (required for OTBR Web UI)
+RUN apt-get update && apt-get install -y curl \
+ && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+ && apt-get install -y nodejs
+
 COPY openthread-core-config-posix.h /usr/src/
 # Clone OTBR
 WORKDIR /usr/src
