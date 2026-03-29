@@ -26,7 +26,7 @@ RUN apt-get purge -y libsystemd-dev
 
 # Build OTBR (minimal)
 WORKDIR /usr/src/ot-br-posix
-
+RUN mv /usr/src/openthread-core-config-posix.h /usr/src/ot-br-posix/third_party/openthread/repo/ \
 RUN ./script/cmake-build \
     -DBUILD_TESTING=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
