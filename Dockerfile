@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     python3 python3-pip iproute2 iptables curl xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
+COPY openthread-core-ha-config-posix.h /usr/src/
 # Clone OTBR
 WORKDIR /usr/src
 RUN git clone https://github.com/openthread/ot-br-posix.git /usr/src/ot-br-posix
@@ -21,6 +22,7 @@ RUN git submodule update --init --recursive
 RUN apt-get update && apt-get install -y sudo
 
 RUN ./script/bootstrap
+RUN apt-get purge -y libsystemd-dev
 
 # Build OTBR (minimal)
 WORKDIR /usr/src/ot-br-posix
@@ -31,10 +33,12 @@ RUN ./script/cmake-build \
     -DOTBR_DBUS=OFF \
     -DOTBR_WEB=OFF \
     -DOTBR_REST=OFF \
+    -DOT_POSIX_RCP_HDLC_BUS=ON \
     -DOTBR_BORDER_ROUTING=ON \
     -DOTBR_BACKBONE_ROUTER=ON \
     -DOTBR_NAT64=ON \
     -DOTBR_VENDOR_NAME="MyVendor" \
+    -DOT_PROJECT_CONFIG="/usr/src/ot-br-posix/third_party/openthread/repo/openthread-core-config-posix.h" \
     -DOTBR_PRODUCT_NAME="ESP32-C6-RCP"
 
 RUN cd build/otbr && ninja install

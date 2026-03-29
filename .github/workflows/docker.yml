@@ -41,4 +41,5 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
+          no-cache: true       # 🔹 Force rebuild from scratch
           tags: ${{ steps.meta.outputs.tags }}
