@@ -37,6 +37,7 @@ RUN ./script/cmake-build \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DOTBR_DBUS=OFF \
     -DOTBR_WEB=ON \
+    -DOTBR_WEB_PORT=8081 \
     -DOTBR_REST=OFF \
     -DOT_POSIX_RCP_HDLC_BUS=ON \
     -DOTBR_BORDER_ROUTING=ON \
