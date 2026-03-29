@@ -31,7 +31,7 @@ RUN ./script/cmake-build \
     -DBUILD_TESTING=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DOTBR_DBUS=OFF \
-    -DOTBR_WEB=OFF \
+    -DOTBR_WEB=ON \
     -DOTBR_REST=OFF \
     -DOT_POSIX_RCP_HDLC_BUS=ON \
     -DOTBR_BORDER_ROUTING=ON \
@@ -57,7 +57,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     libssl3 libdbus-1-3 libavahi-client3 libreadline8 \
     iproute2 iptables curl ca-certificates xz-utils \
+    ipset \
     && rm -rf /var/lib/apt/lists/*
+
+# Setup routing table for OpenThread
+RUN \
+    mkdir -p /etc/iproute2 \
+    && echo "88 openthread" >> /etc/iproute2/rt_tables
 
 # Install s6-overlay (v3, amd64 only)
 RUN curl -L https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-noarch.tar.xz -o /tmp/s6-noarch.tar.xz \
