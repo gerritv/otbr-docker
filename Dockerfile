@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 # Install Node.js (required for OTBR Web UI)
 RUN apt-get update && apt-get install -y curl \
  && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
- && apt-get install -y nodejs
+ && apt-get install -y nodejs libjsoncpp25
 
 COPY openthread-core-config-posix.h /usr/src/
 # Clone OTBR
