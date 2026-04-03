@@ -61,6 +61,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Runtime dependencies
 RUN apt-get update && apt-get install -y \
+    liblzma5 \
     libssl3 libdbus-1-3 libavahi-client3 libreadline8 \
     iproute2 iptables curl ca-certificates xz-utils \
     ipset \
