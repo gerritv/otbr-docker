@@ -72,8 +72,10 @@ RUN \
     && echo "88 openthread" >> /etc/iproute2/rt_tables
 
 # Install s6-overlay (v3, amd64 only)
-RUN curl -L https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-noarch.tar.xz -o /tmp/s6-noarch.tar.xz \
- && curl -L https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-x86_64.tar.xz -o /tmp/s6-x86_64.tar.xz \
+RUN curl -fSL https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-noarch.tar.xz -o /tmp/s6-noarch.tar.xz \
+ && curl -fSL https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-x86_64.tar.xz -o /tmp/s6-x86_64.tar.xz \
+ && file /tmp/s6-noarch.tar.xz \
+ && file /tmp/s6-x86_64.tar.xz \
  && tar -C / -Jxpf /tmp/s6-noarch.tar.xz \
  && tar -C / -Jxpf /tmp/s6-x86_64.tar.xz \
  && rm /tmp/s6-*.tar.xz
