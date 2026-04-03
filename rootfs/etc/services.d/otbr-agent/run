@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv sh
+#!/commandwith-contenv sh
 set -e
 
 echo "[otbr-agent] Starting with:"

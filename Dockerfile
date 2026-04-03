@@ -94,7 +94,7 @@ RUN chmod +x /etc/services.d/otbr-web/run
 RUN chmod +x /etc/services.d/otbr-agent/finish
 RUN chmod +x /etc/services.d/otbr-web/finish
 # Sanity check
-RUN test -x /usr/bin/with-contenv
+RUN test -x /command/with-contenv
 
 # Expose optional Thread/UDP ports
 EXPOSE 49191/udp
