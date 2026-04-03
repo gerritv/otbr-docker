@@ -28,7 +28,7 @@ ARGS=""
 
 # REST interface
 if [ -n "${OTBR_REST_IP}" ] && [ -n "${OTBR_REST_PORT}" ]; then
-    ARGS="$ARGS --rest-listen-address ${OTBR_REST_IP} --rest-listen-port${OTBR_REST_PORT}"
+    ARGS="$ARGS --rest-listen-address ${OTBR_REST_IP} --rest-listen-port ${OTBR_REST_PORT}"
 fi
 
 exec /usr/local/sbin/otbr-agent \
