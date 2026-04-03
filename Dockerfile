@@ -75,7 +75,9 @@ RUN \
 RUN curl -L https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-noarch.tar.xz -o /tmp/s6-noarch.tar.xz \
  && curl -L https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-x86_64.tar.xz -o /tmp/s6-x86_64.tar.xz \
  && tar -C / -Jxpf /tmp/s6-noarch.tar.xz \
- && tar -C / -Jxpf /tmp/s6-x86_64.tar.xz
+ && tar -C / -Jxpf /tmp/s6-x86_64.tar.xz \
+ && rm /tmp/s6-*.tar.xz
+
 
 # Copy OTBR binaries and libraries
 COPY --from=builder /usr/local/ /usr/local/
