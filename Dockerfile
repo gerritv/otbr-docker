@@ -66,6 +66,8 @@ RUN apt-get update && apt-get install -y \
     iproute2 iptables curl ca-certificates xz-utils \
     ipset \
     && rm -rf /var/lib/apt/lists/*
+    
+    RUN apt-get update && apt-get install -y libjsoncpp25
 
 # Setup routing table for OpenThread
 RUN \
