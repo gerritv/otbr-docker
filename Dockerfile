@@ -83,8 +83,13 @@ COPY --from=builder /usr/local/ /usr/local/
 # Copy s6 service scripts
 COPY rootfs/ /
 
-# Ensure run script is executable
+# Ensure scripts are executable
 RUN chmod +x /etc/services.d/otbr-agent/run
+RUN chmod +x /etc/services.d/otbr-web/run
+RUN chmod +x /etc/services.d/otbr-agent/finish
+RUN chmod +x /etc/services.d/otbr-web/finish
+# Sanity check
+RUN test -x /usr/bin/with-contenv
 
 # Expose optional Thread/UDP ports
 EXPOSE 49191/udp

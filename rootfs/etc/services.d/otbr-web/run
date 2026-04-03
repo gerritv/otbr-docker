@@ -1,5 +1,4 @@
-#!/bin/sh
-with-contenv
+#!/usr/bin/with-contenv sh
 set -e
 
 echo "[otbr-web] Starting"
