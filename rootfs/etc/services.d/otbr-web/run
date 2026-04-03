@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+echo "[otbr-web] Starting"
+echo "[otbr-web] WEB_PORT=${OTBR_WEB_PORT}"
+echo "[otbr-web] AGENT_URL=${OTBR_AGENT_URL}"
+
+exec otbr-web \
+  --port "${OTBR_WEB_PORT}" \
+  --agent-url "${OTBR_AGENT_URL}"

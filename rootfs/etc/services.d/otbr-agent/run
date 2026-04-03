@@ -1,8 +1,38 @@
-#!/bin/sh
-# with-contenv
+#!/usr/bin/with-contenv sh
+set -e
+
+echo "[otbr-agent] Starting with:"
+echo "  RADIO_URL=${OTBR_RADIO_URL}"
+echo "  THREAD_IF=${OTBR_THREAD_INTERFACE}"
+echo "  BACKBONE_IF=${OTBR_BACKBONE_IF_NAME}"
+echo "  DEBUG_LEVEL=${OTBR_DEBUG_LEVEL}"
+echo "  VERBOSE=${OTBR_VERBOSE}"
+echo "  SYSLOG_DISABLE=${OTBR_SYSLOG_DISABLE}"
+echo "  DATA_PATH=${OTBR_DATA_PATH}"
+echo "  RADIO_VERSION=${OTBR_RADIO_VERSION}"
+echo "  AUTO_ATTACH=${OTBR_AUTO_ATTACH}"
+echo "  REST=${OTBR_REST_IP}:${OTBR_REST_PORT}"
+echo "  VENDOR_NAME=${OTBR_VENDOR_NAME}"
+echo "  MODEL_NAME=${OTBR_MODEL_NAME}"
+
+ARGS=""
+
+[ -n "${OTBR_DEBUG_LEVEL}" ]      && ARGS="$ARGS -d ${OTBR_DEBUG_LEVEL}"
+[ -n "${OTBR_VERBOSE}" ]          && ARGS="$ARGS -v"
+[ -n "${OTBR_SYSLOG_DISABLE}" ]   && ARGS="$ARGS -s"
+[ -n "${OTBR_DATA_PATH}" ]        && ARGS="$ARGS --data-path ${OTBR_DATA_PATH}"
+[ -n "${OTBR_RADIO_VERSION}" ]    && ARGS="$ARGS --radio-version ${OTBR_RADIO_VERSION}"
+[ -n "${OTBR_AUTO_ATTACH}" ]      && ARGS="$ARGS --auto-attach"
+[ -n "${OTBR_VENDOR_NAME}" ]      && ARGS="$ARGS --vendor-name \"${OTBR_VENDOR_NAME}\""
+[ -n "${OTBR_MODEL_NAME}" ]       && ARGS="$ARGS --model-name \"${OTBR_MODEL_NAME}\""
+
+# REST interface
+if [ -n "${OTBR_REST_IP}" ] && [ -n "${OTBR_REST_PORT}" ]; then
+    ARGS="$ARGS --rest-listen ${OTBR_REST_IP}:${OTBR_REST_PORT}"
+fi
 
 exec /usr/local/sbin/otbr-agent \
-  -I wpan0 \
-  -B eno1 \
-  "spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800&uart-init-deassert" \
-  -v -d 7
+  -I "${OTBR_THREAD_INTERFACE}" \
+  -B "${OTBR_BACKBONE_IF_NAME}" \
+  ${ARGS} \
+  "${OTBR_RADIO_URL}"

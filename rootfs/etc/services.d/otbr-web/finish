@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "[otbr-web] Exited with code $1"

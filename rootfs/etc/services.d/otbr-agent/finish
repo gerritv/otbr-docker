@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "[otbr-agent] Exited with code $1"
