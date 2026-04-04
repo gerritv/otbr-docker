@@ -6,5 +6,6 @@ echo "[otbr-web] WEB_PORT=${OTBR_WEB_PORT}"
 echo "[otbr-web] AGENT_URL=${OTBR_AGENT_URL}"
 
 exec otbr-web \
+  -I "${OTBR_THREAD_INTERFACE:-wpan0}" \
   -p "${OTBR_WEB_PORT}" \
   -a "${OTBR_AGENT_URL}"
