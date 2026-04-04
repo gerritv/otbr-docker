@@ -43,8 +43,8 @@ RUN ./script/cmake-build \
     -DOTBR_BORDER_ROUTING=ON \
     -DOTBR_BACKBONE_ROUTER=ON \
     -DOTBR_NAT64=ON \
+    -DOT_PROJECT_CONFIG="/usr/src/ot-br-posix/third_party/openthread/repo/openthread-core-config-posix.h" 
   #  -DOTBR_VENDOR_NAME="MyVendor" \
-    -DOT_PROJECT_CONFIG="/usr/src/ot-br-posix/third_party/openthread/repo/openthread-core-config-posix.h" \
   #  -DOTBR_PRODUCT_NAME="ESP32-C6-RCP"
 
 RUN cd build/otbr && ninja install
