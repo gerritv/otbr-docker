@@ -3,10 +3,10 @@ set -e
 
 echo "[otbr-web] Starting"
 echo "[otbr-web] WEB_PORT=${OTBR_WEB_PORT}"
-echo "[otbr-web] AGENT_URL=${OTBR_AGENT_URL}"
+echo "[otbr-web] WEB_URL=${OTBR_WEB_IF}"
 echo "[otbr-web] THREAD_INTERFACE=${OTBR_THREAD_INTERFACE:-wpan0}"
 
-echo "[otbr-web] Waiting for otbr-agent at ${OTBR_REST_IF}:${OTBR_REST_PORT}..."
+echo "[otbr-web] Waiting for otbr-agent at ${OTBR_WEB_IF}:${OTBR_WEB_PORT}..."
 
 # Wait for otbr-agent REST API to respond
 until nc -z "${OTBR_REST_IF}" "${OTBR_REST_PORT}"; do
@@ -17,4 +17,4 @@ echo "[otbr-web] otbr-agent is ready, starting web UI"
 exec otbr-web \
   -I "${OTBR_THREAD_INTERFACE:-wpan0}" \
   -p "${OTBR_WEB_PORT}" \
-  -a "${OTBR_AGENT_URL}"
+  -a "${OTBR_WEB_IF}"
