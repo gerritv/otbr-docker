@@ -43,9 +43,9 @@ RUN ./script/cmake-build \
     -DOTBR_BORDER_ROUTING=ON \
     -DOTBR_BACKBONE_ROUTER=ON \
     -DOTBR_NAT64=ON \
-    -DOTBR_VENDOR_NAME="MyVendor" \
+  #  -DOTBR_VENDOR_NAME="MyVendor" \
     -DOT_PROJECT_CONFIG="/usr/src/ot-br-posix/third_party/openthread/repo/openthread-core-config-posix.h" \
-    -DOTBR_PRODUCT_NAME="ESP32-C6-RCP"
+  #  -DOTBR_PRODUCT_NAME="ESP32-C6-RCP"
 
 RUN cd build/otbr && ninja install
 
@@ -66,8 +66,11 @@ RUN apt-get update && apt-get install -y \
     iproute2 iptables curl ca-certificates xz-utils \
     ipset \
     && rm -rf /var/lib/apt/lists/*
-    
-    RUN apt-get update && apt-get install -y libjsoncpp25
+
+RUN apt-get update && apt-get install -y libjsoncpp25
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
 
 # Setup routing table for OpenThread
 RUN \
