@@ -77,6 +77,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    libprotobuf-lite32t64 \
+ && rm -rf /var/lib/apt/lists/*
+
 # Setup routing table for OpenThread
 RUN \
     mkdir -p /etc/iproute2 \

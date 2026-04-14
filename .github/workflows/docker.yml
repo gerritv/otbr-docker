@@ -2,7 +2,7 @@ name: Build OTBR Docker Image
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "integration"]
 
 env:
   REGISTRY: ghcr.io
