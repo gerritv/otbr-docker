@@ -35,13 +35,18 @@ RUN mv /usr/src/openthread-core-config-posix.h /usr/src/ot-br-posix/third_party/
 RUN ./script/cmake-build \
     -DBUILD_TESTING=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
+    -DOTBR_FEATURE_FLAGS=ON \
     -DOTBR_DBUS=OFF \
     -DOTBR_WEB=ON \
-    -DOTBR_WEB_PORT=8081 \
-    -DOTBR_REST=OFF \
-    -DOT_POSIX_RCP_HDLC_BUS=ON \
     -DOTBR_BORDER_ROUTING=ON \
+    -DOTBR_REST=ON \
     -DOTBR_BACKBONE_ROUTER=ON \
+    -DOTBR_TREL=ON \
+    -DOTBR_NAT64=ON \
+    -DOT_POSIX_NAT64_CIDR="192.168.255.0/24" \
+    -DOTBR_DNS_UPSTREAM_QUERY=ON \
+    -DOTBR_WEB_PORT=8081 \
+    -DOT_POSIX_RCP_HDLC_BUS=ON \
     -DOTBR_NAT64=ON \
     -DOT_PROJECT_CONFIG="/usr/src/ot-br-posix/third_party/openthread/repo/openthread-core-config-posix.h" 
   #  -DOTBR_VENDOR_NAME="MyVendor" \
