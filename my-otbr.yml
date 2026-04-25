@@ -1,0 +1,42 @@
+services:
+    otbr:
+        image: ghcr.io/gerritv/otbr-docker:latest
+        container_name: otbr
+        network_mode: "host"
+        restart: unless-stopped
+        privileged: true
+
+        devices:
+            - "/dev/ttyACM0:/dev/ttyACM0"
+
+        environment:
+            OTBR_RADIO_URL: "spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800"
+            OTBR_THREAD_INTERFACE: "wpan0"
+            OTBR_BACKBONE_IF_NAME: "eno1"
+
+            OTBR_DEBUG_LEVEL: "7"
+            OTBR_VERBOSE: "1"
+            OTBR_SYSLOG_DISABLE: "1"
+
+            OTBR_DATA_PATH: "/var/lib/otbr"
+            OTBR_RADIO_VERSION: "1"
+            OTBR_AUTO_ATTACH: "1"
+
+            OTBR_REST_IP: "0.0.0.0"
+            OTBR_REST_PORT: "8090"
+
+            OTBR_WEB_PORT: "8081"
+            OTBR_WEB_IF: "0.0.0.0"
+
+            OTBR_VENDOR_NAME: "GerritTech"
+            OTBR_MODEL_NAME: "C6-RCP"
+
+            TZ: "America/Toronto"
+
+            # NEW: configure service vars
+            OTBR_TXPOWER: "0"
+            OTBR_TREL: "1"
+            OTBR_NAT64: "1"
+
+        volumes:
+            - ./otbr-data:/var/lib/otbr

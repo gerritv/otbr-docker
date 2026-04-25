@@ -1,0 +1,33 @@
+#!/command/with-contenv bash
+set -e
+
+OTBR_TXPOWER=${OTBR_TXPOWER:-0}
+OTBR_TREL=${OTBR_TREL:-1}
+OTBR_NAT64=${OTBR_NAT64:-0}
+
+echo "[configure] waiting for otbr-agent..."
+
+for i in $(seq 1 30); do
+    if ot-ctl state >/dev/null 2>&1; then
+        break
+    fi
+    sleep 1
+done
+
+if [ "$OTBR_TREL" = "1" ]; then
+    echo "[configure] enabling TREL"
+    ot-ctl trel enable || true
+fi
+
+echo "[configure] setting TX power ${OTBR_TXPOWER}"
+ot-ctl txpower "${OTBR_TXPOWER}" || true
+
+if [ "$OTBR_NAT64" = "1" ]; then
+    echo "[configure] enabling NAT64"
+    ot-ctl nat64 enable || true
+    ot-ctl dns server upstream enable || true
+fi
+
+echo "[configure] done"
+
+exec sleep infinity

@@ -107,6 +107,7 @@ RUN chmod +x /etc/services.d/otbr-agent/run
 RUN chmod +x /etc/services.d/otbr-web/run
 RUN chmod +x /etc/services.d/otbr-agent/finish
 RUN chmod +x /etc/services.d/otbr-web/finish
+RUN chmod +x /etc/services.d/otbr-agent-configure/run
 # Sanity check
 RUN test -x /command/with-contenv
 
