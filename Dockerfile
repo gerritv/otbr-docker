@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y \
 
 # Install Node.js (required for OTBR Web UI)
 RUN apt-get update && apt-get install -y curl \
- && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
- && apt-get install -y nodejs libjsoncpp25
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs libjsoncpp25
 
 COPY openthread-core-config-posix.h /usr/src/
 # Clone OTBR
@@ -36,7 +36,11 @@ RUN ./script/cmake-build \
     -DBUILD_TESTING=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr/local \
     -DOTBR_FEATURE_FLAGS=ON \
+    -DOTBR_MDNS=openthread \
+    -DOTBR_VERSION= \
+    -DOT_PACKAGE_VERSION= \
     -DOTBR_DBUS=OFF \
+    -DOT_POSIX_RCP_HDLC_BUS=ON \
     -DOTBR_WEB=ON \
     -DOTBR_BORDER_ROUTING=ON \
     -DOTBR_REST=ON \
@@ -46,18 +50,20 @@ RUN ./script/cmake-build \
     -DOT_POSIX_NAT64_CIDR="192.168.255.0/24" \
     -DOTBR_DNS_UPSTREAM_QUERY=ON \
     -DOTBR_WEB_PORT=8081 \
-    -DOT_POSIX_RCP_HDLC_BUS=ON \
-    -DOTBR_NAT64=ON \
-    -DOT_PROJECT_CONFIG="/usr/src/ot-br-posix/third_party/openthread/repo/openthread-core-config-posix.h" 
-  #  -DOTBR_VENDOR_NAME="MyVendor" \
-  #  -DOTBR_PRODUCT_NAME="ESP32-C6-RCP"
+    -DOT_COAP=OFF \
+    -DOT_COAPS=OFF \
+    -DOT_THREAD_VERSION=1.4 \
+    -DOT_PROJECT_CONFIG="/usr/src/ot-br-posix/third_party/openthread/repo/openthread-core-config-posix.h" \
+    -DOT_RCP_RESTORATION_MAX_COUNT=2 
+#  -DOTBR_VENDOR_NAME="MyVendor" \
+#  -DOTBR_PRODUCT_NAME="ESP32-C6-RCP"
 
 RUN cd build/otbr && ninja install
 
 # Check results
 RUN echo "==== CHECK OTBR INSTALL ====" \
- && find /usr/local -name otbr-agent || true \
- && ls -l /usr/local/bin || true
+    && find /usr/local -name otbr-agent || true \
+    && ls -l /usr/local/bin || true
 
 # --- Stage 2: Runtime container ---
 FROM debian:bookworm-slim
@@ -79,7 +85,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN apt-get update && apt-get install -y \
     libprotobuf-lite32 \
- && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # Setup routing table for OpenThread
 RUN \
@@ -88,12 +94,12 @@ RUN \
 
 # Install s6-overlay (v3, amd64 only)
 RUN curl -fSL https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-noarch.tar.xz -o /tmp/s6-noarch.tar.xz \
- && curl -fSL https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-x86_64.tar.xz -o /tmp/s6-x86_64.tar.xz \
- && file /tmp/s6-noarch.tar.xz \
- && file /tmp/s6-x86_64.tar.xz \
- && tar -C / -Jxpf /tmp/s6-noarch.tar.xz \
- && tar -C / -Jxpf /tmp/s6-x86_64.tar.xz \
- && rm /tmp/s6-*.tar.xz
+    && curl -fSL https://github.com/just-containers/s6-overlay/releases/download/v3.1.6.2/s6-overlay-x86_64.tar.xz -o /tmp/s6-x86_64.tar.xz \
+    && file /tmp/s6-noarch.tar.xz \
+    && file /tmp/s6-x86_64.tar.xz \
+    && tar -C / -Jxpf /tmp/s6-noarch.tar.xz \
+    && tar -C / -Jxpf /tmp/s6-x86_64.tar.xz \
+    && rm /tmp/s6-*.tar.xz
 
 
 # Copy OTBR binaries and libraries
