@@ -125,8 +125,5 @@ RUN chmod +x /etc/services.d/otbr-agent-configure/run
 # Sanity check
 RUN test -x /command/with-contenv
 
-# Expose optional Thread/UDP ports
-EXPOSE 49191/udp
-
 # Start s6-overlay
 ENTRYPOINT ["/init"]

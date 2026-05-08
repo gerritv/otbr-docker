@@ -1,6 +1,7 @@
 #!/command/with-contenv sh
 set -e
 
+
 echo "[otbr-agent] Starting with:"
 echo "  RADIO_URL=${OTBR_RADIO_URL}"
 echo "  THREAD_IF=${OTBR_THREAD_INTERFACE}"
@@ -14,6 +15,12 @@ echo "  AUTO_ATTACH=${OTBR_AUTO_ATTACH}"
 echo "  REST=${OTBR_REST_IP}:${OTBR_REST_PORT}"
 echo "  VENDOR_NAME=${OTBR_VENDOR_NAME}"
 echo "  MODEL_NAME=${OTBR_MODEL_NAME}"
+
+echo "Setup OTBR firewall, as disabled"
+ipset create -exist otbr-ingress-deny-src hash:net family inet6
+ipset create -exist otbr-ingress-deny-src-swap hash:net family inet6
+ipset create -exist otbr-ingress-allow-dst hash:net family inet6
+ipset create -exist otbr-ingress-allow-dst-swap hash:net family inet6
 
 ARGS=""
 
