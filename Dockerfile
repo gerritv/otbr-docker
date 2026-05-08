@@ -3,6 +3,8 @@ FROM debian:bookworm-slim AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+ENV OTBR_BETA_VERSION: 624a7d98e0dac5984c2982068f71fc81d2dbceb5
+
 # Build dependencies
 RUN apt-get update && apt-get install -y \
     lsb-release \
@@ -20,14 +22,20 @@ RUN apt-get update && apt-get install -y curl \
 COPY openthread-core-config-posix.h /usr/src/
 # Clone OTBR
 WORKDIR /usr/src
-RUN git clone https://github.com/openthread/ot-br-posix.git /usr/src/ot-br-posix
-WORKDIR /usr/src/ot-br-posix
-RUN git submodule update --init --recursive
-
-RUN apt-get update && apt-get install -y sudo
-
-RUN ./script/bootstrap
-RUN apt-get purge -y libsystemd-dev
+RUN \
+    set -x \
+    && apt-get update \
+    # The OTBR build script tries to run `sudo`
+    && apt-get install -y --no-install-recommends sudo git \
+    && git clone --depth 1 -b main https://github.com/openthread/ot-br-posix.git /usr/src/ot-br-posix \
+    && cd /usr/src/ot-br-posix \
+    && git fetch origin ${OTBR_BETA_VERSION} \
+    && git checkout ${OTBR_BETA_VERSION} \
+    && git submodule update --init \
+    # Bootstrap downloads a few more repos
+    && ./script/bootstrap \
+    # Remove libsystemd-dev to avoid unnecessary linkage
+    && apt-get purge -y libsystemd-dev
 
 # Build OTBR (minimal)
 WORKDIR /usr/src/ot-br-posix
