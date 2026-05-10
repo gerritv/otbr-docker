@@ -22,7 +22,7 @@ services:
             OTBR_RADIO_VERSION: "1"
             OTBR_AUTO_ATTACH: "1"
 
-            OTBR_REST_IP: "0.0.0.0"
+            OTBR_REST_IP: "::"
             OTBR_REST_PORT: "8090"
 
             OTBR_WEB_PORT: "8081"

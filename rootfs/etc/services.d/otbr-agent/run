@@ -1,6 +1,12 @@
 #!/command/with-contenv sh
 set -e
 
+#
+# OTBR firewall chain names
+# Match HA OTBR behavior
+#
+otbr_forward_ingress_chain="OTBR_FORWARD_INGRESS"
+otbr_forward_egress_chain="OTBR_FORWARD_EGRESS"
 
 echo "[otbr-agent] Starting with:"
 echo "  RADIO_URL=${OTBR_RADIO_URL}"
@@ -16,11 +22,68 @@ echo "  REST=${OTBR_REST_IP}:${OTBR_REST_PORT}"
 echo "  VENDOR_NAME=${OTBR_VENDOR_NAME}"
 echo "  MODEL_NAME=${OTBR_MODEL_NAME}"
 
-echo "Setup OTBR firewall, as disabled"
+#
+# Ensure persistent storage exists
+#
+mkdir -p "${OTBR_DATA_PATH}"
+
+#
+# Create OTBR ipsets
+# HA OTBR does this even when firewalling is disabled
+#
+echo "[otbr-agent] Creating OTBR ipsets..."
+
 ipset create -exist otbr-ingress-deny-src hash:net family inet6
 ipset create -exist otbr-ingress-deny-src-swap hash:net family inet6
 ipset create -exist otbr-ingress-allow-dst hash:net family inet6
 ipset create -exist otbr-ingress-allow-dst-swap hash:net family inet6
+
+#
+# Create OTBR firewall chains
+# These exist even when filtering is disabled
+#
+echo "[otbr-agent] Creating OTBR firewall chains..."
+
+#
+# Remove old hooks if present
+#
+ip6tables -D FORWARD -o "${OTBR_THREAD_INTERFACE}" -j "${otbr_forward_ingress_chain}" 2>/dev/null || true
+ip6tables -D FORWARD -i "${OTBR_THREAD_INTERFACE}" -j "${otbr_forward_egress_chain}" 2>/dev/null || true
+
+#
+# Flush existing chains if present
+#
+ip6tables -F "${otbr_forward_ingress_chain}" 2>/dev/null || true
+ip6tables -F "${otbr_forward_egress_chain}" 2>/dev/null || true
+
+#
+# Create chains if missing
+#
+ip6tables -N "${otbr_forward_ingress_chain}" 2>/dev/null || true
+ip6tables -N "${otbr_forward_egress_chain}" 2>/dev/null || true
+
+#
+# Hook chains into FORWARD path
+#
+ip6tables -I FORWARD 1 -o "${OTBR_THREAD_INTERFACE}" -j "${otbr_forward_ingress_chain}"
+ip6tables -I FORWARD 2 -i "${OTBR_THREAD_INTERFACE}" -j "${otbr_forward_egress_chain}"
+
+#
+# HA behavior when firewall disabled:
+# ACCEPT everything, but keep topology intact
+#
+ip6tables -A "${otbr_forward_ingress_chain}" -j ACCEPT
+ip6tables -A "${otbr_forward_egress_chain}" -j ACCEPT
+
+#
+# Debug visibility
+#
+echo "[otbr-agent] Active ipsets:"
+ipset list || true
+
+echo "[otbr-agent] Active OTBR ip6tables chains:"
+ip6tables -S "${otbr_forward_ingress_chain}" || true
+ip6tables -S "${otbr_forward_egress_chain}" || true
 
 ARGS=""
 
@@ -32,10 +95,14 @@ ARGS=""
 [ -n "${OTBR_VENDOR_NAME}" ]      && ARGS="$ARGS --vendor-name \"${OTBR_VENDOR_NAME}\""
 [ -n "${OTBR_MODEL_NAME}" ]       && ARGS="$ARGS --model-name \"${OTBR_MODEL_NAME}\""
 
+#
 # REST interface
+#
 if [ -n "${OTBR_REST_IP}" ] && [ -n "${OTBR_REST_PORT}" ]; then
     ARGS="$ARGS --rest-listen-address ${OTBR_REST_IP} --rest-listen-port ${OTBR_REST_PORT}"
 fi
+
+echo "[otbr-agent] Launching otbr-agent..."
 
 exec /usr/local/sbin/otbr-agent \
   -I "${OTBR_THREAD_INTERFACE}" \
